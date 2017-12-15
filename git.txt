@@ -1,0 +1,28 @@
+creates an empty repo
+git init 
+
+displays status of the files in the repo (tracked/untracked/commit)
+git status
+
+to make the file untracked to tracked 
+git add ram.txt
+
+to make permanent changes in the repo
+git commit -m message
+
+find diff between local file and file in the repo
+git diff ram.txt
+
+to clone a repo
+git clone original_repo new_repo
+
+pull changes done by the other repo
+git pull repopath branch
+
+git clone https://github.com/govind1974/sap17.get sapient17
+
+to push it into remote repo
+git push origin master
+
+to pull it to local repo
+git pull origin master
