@@ -1,0 +1,118 @@
+CREATE TABLE sap_dept(did NUMBER PRIMARY KEY, 
+					  dname VARCHAR2(45) NOTNULL);
+
+DESC sap_dept;
+
+INSERT INTO sap_dept VALUES(1,'HR');
+INSERT INTO sap_dept VALUES(2,'FINANCE');
+INSERT INTO sap_dept VALUES(3,'PRODUCTION');
+INSERT INTO sap_dept VALUES(4,'IT');
+
+CREATE TABLE sap_emp(eid NUMBER PRIMARY KEY,
+					 ename VARCHAR2(45) NOT NULL,
+					 sal NUMBER(10,2) CHECK(SAL>=5000),
+					 dept_id NUMBER, 
+					 CONSTRAINT emp_fk FOREIGN KEY(dept_id)
+					 REFERENCES sap_dept(did));
+					 
+INSERT INTO sap_emp VALUES(1001,'Ram', 5000, 1);                                					 
+INSERT INTO sap_emp VALUES(1001,'Tom', 8000, 1);   //Will give an error of primary key (unique)
+INSERT INTO sap_emp VALUES(1002,'Tom', 3000, 1);   //Will give an error for contraint check
+INSERT INTO sap_emp VALUES(1002,'Tom', 8000, 5);   //Will give an error -- parent key not found -- foreign key value must match the primary key in parent table
+
+INSERT INTO sap_emp VALUES(1002,'Tom', 15000, 1);
+INSERT INTO sap_emp VALUES(1003,'Sam', 23000, 1);
+INSERT INTO sap_emp VALUES(1004,'Peter', 13000, 2);
+INSERT INTO sap_emp VALUES(1005,'Shyam', 7000, 2);
+INSERT INTO sap_emp VALUES(1006,'Ravi',27000, 2);
+INSERT INTO sap_emp VALUES(1007,'Salman Khan', 37000, 3);
+INSERT INTO sap_emp VALUES(1008,'Shahrukh Khan', 39000, 3);
+INSERT INTO sap_emp VALUES(1009,'Rajesh', 18000, 3);
+INSERT INTO sap_emp VALUES(1010,'Janit', 18000, 3);
+INSERT INTO sap_emp(eid, ename, dept_id) VALUES(1011, 'Tarun', 2);
+
+
+SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE FROM USER_CONSTRAINTS WHERE TABLE_NAME='SAP_DEPT';
+SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE FROM USER_CONSTRAINTS WHERE TABLE_NAME='SAP_EMP';
+
+SELECT OBJECT_NAME FROM USER_OBJECTS WHERE OBJECT_TYPE='TABLE';
+
+SELECT * FROM sap_emp;  
+SELECT * FROM sap_emp ORDER BY ename; 
+SELECT * FROM sap_emp ORDER BY ename DESC;
+SELECT * FROM sap_emp ORDER BY sal DESC;
+SELECT * FROM sap_emp ORDER BY dept_id, ename;  
+SELECT * FROM sap_emp ORDER BY sal DESC, ename asc; 
+
+SELECT * FROM sap_dept WHERE did=1;
+SELECT * FROM sap_emp WHERE eid=1001;
+SELECT * FROM sap_emp WHERE ename='Ram';  
+SELECT * FROM sap_emp WHERE ename='ram';     // Will give an error because 'r' is in lowercase 
+SELECT * FROM sap_emp WHERE sal>10000 AND sal<20000;
+SELECT * FROM sap_emp WHERE sal between 10000 AND 20000    // including 10k and 20k
+
+SELECT * FROM sap_emp WHERE ename LIKE 'S%';
+SELECT * FROM sap_emp WHERE ename LIKE '%Khan';  //prints names with last name as 'Khan'
+SELECT * FROM sap_emp WHERE ename LIKE '_a%';    //prints names in which 2nd letter is 'a'
+SELECT * FROM sap_emp WHERE ename LIKE '___';    //prints names having only 3 characters
+SELECT * FROM sap_emp WHERE length(ename)=3;     //prints names having only 3 characters
+
+SELECT * FROM sap_emp WHERE dept_id=1 OR dept_id=2; 
+SELECT * FROM sap_emp WHERE dept_id IN(1,2);  
+SELECT * FROM sap_emp WHERE dept_id NOT IN(1,2);
+
+SELECT * FROM sap_emp WHERE sal IS NULL;
+SELECT * FROM sap_emp WHERE sal IS NOT NULL;
+
+SELECT eid EMP_ID, ename EMP_NAME, sal Salary, sal*12 "Annual Salary" FROM sap_emp;
+
+SELECT did, UPPER(dname) "Dept Name"  FROM sap_dept; 
+SELECT did, LOWER(dname) "Dept Name"  FROM sap_dept;         
+
+SELECT eid, INITCAP(ename) "Emp Name", LENGTH(ename) "No. of Char" FROM sap_emp;
+SELECT eid, SUBSTR(ename,1,4) from sap_emp;                 //to display only 3 characters using SUBSTR
+
+SELECT eid, ename, sal, NVL(TO_CHAR(sal), '-NA-') FROM sap_emp;
+
+SELECT POWER(3,3), MOD(9,2), ROUND(86.37823,2), CEIL(45.3), FLOOR(45.3), TRUNC(86.37823,2) FROM dual;
+
+SELECT TRUNC(MONTHS_BETWEEN( '30-JUN-2018', '04-DEC-2017')) FROM dual;
+
+SELECT eid, ename, NULLIF(sal,5000) FROM sap_emp;
+
+SELECT COUNT(eid), SUM(sal), AVG(sal), MAX(sal), MIN(sal) FROM sap_emp;
+SELECT COUNT(eid), SUM(sal), AVG(NVL(sal,0)), MAX(sal), MIN(sal) FROM sap_emp;  
+
+SELECT SUM(sal), ROUND(AVG(NVL(sal,0)),2) FROM sap_emp WHERE dept_id=2;   // Sum and average of salaries of dept_id=2
+
+SELECT dept_id, SUM(sal), ROUND(AVG(NVL(sal,0)),2), MAX(sal),  COUNT(eid) FROM sap_emp GROUP BY dept_id;
+
+SELECT dept_id,  SUM(sal), MAX(sal), COUNT(eid) FROM sap_emp GROUP BY dept_id HAVING COUNT(eid)>3;    //Excluding the dept which have employees less than 3
+
+
+
+CREATE TABLE staff(s_id NUMBER PRIMARY KEY, s_name VARCHAR(20), doj DATE, sal NUMBER(10,2));
+INSERT INTO staff VALUES(1, 'rama','02-AUG-2017',15000); 
+INSERT INTO staff VALUES(2, 'Gama','10-AUG-2012',18000);
+INSERT INTO staff VALUES(3, 'krish','22-SEP-2012',25000); 
+INSERT INTO staff VALUES(4, 'ravi','22-JAN-2014',17000); 
+INSERT INTO staff VALUES(5, 'varun','09-FEB-2016',27000); 
+ALTER TABLE staff ADD desig VARCHAR2(20);
+ALTER TABLE staff ADD CITY VARCHAR2(20) default 'delhi' NOT NULL;
+UPDATE staff SET desig ='manager' WHERE sal>=20000; 
+UPDATE staff SET desig ='associate' WHERE sal<20000; 
+
+ALTER TABLE staff MODIFY s_name VARCHAR2(2);  // will give an error as we have values with more that 2 length in s_name
+
+
+//Important 
+ALTER TABLE staff MODIFY s_name VARCHAR2(30) NULL;
+desc staff
+INSERT INTO staff(s_id,DOJ,sal) VALUES(6,'22-DEC-2010',25000); 
+select * from staff
+ALTER TABLE staff MODIFY s_name VARCHAR2(30) NOT NULL;
+ALTER TABLE staff MODIFY s_name VARCHAR2(30) default 'user' NOT NULL;
+
+
+jgfvwebfryihfg ru34huk  hjcguiy  uksdhfukriu3i4io3hejf3  dghwegdu24o  
+
