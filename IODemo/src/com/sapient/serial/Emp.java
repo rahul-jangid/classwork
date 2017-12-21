@@ -1,11 +1,15 @@
-package com.sapient.serialization;
+package com.sapient.serial;
 
 import java.io.Serializable;
 
-public class Emp implements Serializable {
-	
+public class Emp implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int eid;
-	private String ename;
+	private  String ename;
 	private double sal;
 	
 	public Emp(int eid, String ename, double sal) {
@@ -17,8 +21,10 @@ public class Emp implements Serializable {
 
 	@Override
 	public String toString() {
-		return eid+" "+ename+" "+sal;
+		
+		return eid + " " + ename + " " + sal;
 	}
 	
-
+	
+	
 }

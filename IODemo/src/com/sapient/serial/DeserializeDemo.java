@@ -1,12 +1,11 @@
-package com.sapient.serialization;
+package com.sapient.serial;
 
 import java.io.EOFException;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-public class DeserialzeDemo {
+public class DeserializeDemo {
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		FileInputStream fis = new FileInputStream("employee.txt");
@@ -18,8 +17,9 @@ public class DeserialzeDemo {
 				System.out.println(emp);
 			}
 		}catch(EOFException ex){
-			System.out.println("end of file ");
+			System.out.println("end of file");
 		}
+		
 		ois.close();
 		fis.close();
 
