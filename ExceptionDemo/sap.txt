@@ -1,0 +1,7 @@
+orange
+apple
+grapes
+lemon
+banana
+pomegranate
+water melon

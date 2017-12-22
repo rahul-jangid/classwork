@@ -37,7 +37,7 @@ public class EmpJdbcDao implements Idao {
 			System.out.println(ex.getMessage());
 		}
 		finally{
-			closeConn(conn);
+			closeConn(conn);						// assured to be executed 
 		}
 		return null;
 	}
