@@ -1,0 +1,37 @@
+package com.sapient.client;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import com.sapient.services.ExamSerImpl;
+import com.sapient.services.IExamSer;
+import com.sapient.vo.Answer;
+import com.sapient.vo.Question;
+
+public class Client {
+
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("start quiz");
+		IExamSer ser = ExamSerImpl.getInstance();
+		List<Question> lst = ser.generateQuestions();
+		List<Answer> alist =new ArrayList<Answer>();
+		Answer answer = null;
+		int i =0;
+	
+		for(Question ques: lst){
+			System.out.println(++i +" "+ques.getQdesc());
+			System.out.println(ques.getOpta());
+			System.out.println(ques.getOptb());
+			System.out.println(ques.getOptc());
+			String str = scan.next();
+			answer = new Answer(ques.getQid(),str);
+			alist.add(answer);
+			System.out.println("-------------------------------------------------------------");
+		}
+		int score = ser.evaluate(alist);
+		System.out.println("your score is "+ score);
+	}
+
+}
